@@ -2,14 +2,20 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
   email: yup.string().email().required("Email is required"),
   password: yup
     .string()
-    .min(6, "Password must be at least 6 characters")
-    .required(),
+    .min(8, "Min 8 characters")
+    .matches(/[A-Z]/, "Must include uppercase letter")
+    .matches(/[a-z]/, "Must include lowercase letter")
+    .matches(/[0-9]/, "Must include a number")
+    .matches(/[@$!%*?&]/, "Must include special character")
+    .required("Password is required"),
 });
 
 export default function Register() {
@@ -17,14 +23,20 @@ export default function Register() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/register", data);
-      alert("Registration successful");
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/register",
+        data
+      );
+      toast.success("Registration successfully!");
+      reset();
     } catch (err) {
-      alert(err.response?.data?.message || "Registration failed");
+      toast.error("Registration failed");
+      reset();
     }
   };
 
@@ -34,12 +46,21 @@ export default function Register() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
           <label>Name</label>
-          <input {...register("name")} className="form-control" />
+          <input
+            {...register("name")}
+            className="form-control"
+            autoComplete="off"
+          />
           <p className="text-danger">{errors.name?.message}</p>
         </div>
         <div className="mb-3">
           <label>Email</label>
-          <input type="email" {...register("email")} className="form-control" />
+          <input
+            type="email"
+            {...register("email")}
+            className="form-control"
+            autoComplete="off"
+          />
           <p className="text-danger">{errors.email?.message}</p>
         </div>
         <div className="mb-3">
@@ -48,12 +69,14 @@ export default function Register() {
             type="password"
             {...register("password")}
             className="form-control"
+            autoComplete="off"
           />
           <p className="text-danger">{errors.password?.message}</p>
         </div>
         <button type="submit" className="btn btn-primary">
           Register
         </button>
+        <ToastContainer position="top-center" autoClose={3000} />
       </form>
     </div>
   );
