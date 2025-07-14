@@ -54,7 +54,7 @@ export default function AuthTabs() {
 
       {isLoggedIn && (
         <div className="mt-4">
-          <h3>Welcome! You are logged in.</h3>
+          <h3>Welcome! You are logged in page</h3>
           <button className="btn btn-primary mt-3" onClick={handleLogout}>
             Logout
           </button>
