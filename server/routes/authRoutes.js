@@ -4,6 +4,12 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const authMiddleware = require("../middleware/authMiddleware");
+const adminEmails =
+  process.env.ADMIN_EMAILS?.split(",").map((e) => e.trim().toLowerCase()) || [];
+const superAdminEmails =
+  process.env.SUPERADMIN_EMAILS?.split(",").map((e) =>
+    e.trim().toLowerCase()
+  ) || [];
 
 // register
 router.post("/register", async (req, res) => {
@@ -13,7 +19,15 @@ router.post("/register", async (req, res) => {
     if (existingUser)
       return res.status(400).json({ message: "User already exists" });
 
-    const user = new User({ name, email, password });
+    let role = "User";
+
+    if (superAdminEmails.includes(email.toLowerCase())) {
+      role = "SuperAdmin";
+    } else if (adminEmails.includes(email.toLowerCase())) {
+      role = "Admin";
+    }
+
+    const user = new User({ name, email, password, role });
     await user.save();
 
     res.status(201).json({ message: "User registered successfully" });
