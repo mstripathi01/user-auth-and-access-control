@@ -13,6 +13,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
+// app.use('/api', require('./routes/auth'));
 
 // Connect to DB and start server
 mongoose

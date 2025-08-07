@@ -4,6 +4,7 @@ import * as yup from "yup";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { GoogleLogin } from "@react-oauth/google";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -18,7 +19,7 @@ const schema = yup.object().shape({
     .required("Password is required"),
 });
 
-export default function Register() {
+export default function Register({ onLoginSuccess }) {
   const {
     register,
     handleSubmit,
@@ -37,6 +38,19 @@ export default function Register() {
     } catch (err) {
       toast.error("Registration failed");
       reset();
+    }
+  };
+
+  const handleGoogleRegisterSuccess = async (credentialResponse) => {
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/google", {
+        token: credentialResponse.credential,
+      });
+      localStorage.setItem("token", res.data.token);
+      toast.success("Registered with Google!");
+      onLoginSuccess();
+    } catch (err) {
+      toast.error("Google registration failed");
     }
   };
 
@@ -76,6 +90,13 @@ export default function Register() {
         <button type="submit" className="btn btn-primary">
           Register
         </button>
+        <div className="google-btn-wrapper">
+          <GoogleLogin
+            onSuccess={handleGoogleRegisterSuccess}
+            onError={() => toast.error("Google Sign-Up Failed")}
+            width="200"
+          />
+        </div>
         <ToastContainer position="top-center" autoClose={3000} />
       </form>
     </div>

@@ -4,6 +4,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { GoogleLogin } from "@react-oauth/google";
+import "../App.css";
 
 const schema = yup.object().shape({
   email: yup.string().email().required("Email is required"),
@@ -34,10 +36,25 @@ export default function Login({ onLoginSuccess }) {
     }
   };
 
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/google", {
+        token: credentialResponse.credential,
+      });
+      localStorage.setItem("token", res.data.token);
+      toast.success("Logged in with Google!");
+      onLoginSuccess();
+    } catch (err) {
+      toast.error("Google login failed");
+    }
+  };
+
   return (
     <div className="container mt-5">
       <h2>Login</h2>
+
       <form onSubmit={handleSubmit(onSubmit)}>
+        {/* Email Field */}
         <div className="mb-3">
           <label>Email</label>
           <input
@@ -48,6 +65,8 @@ export default function Login({ onLoginSuccess }) {
           />
           <p className="text-danger">{errors.email?.message}</p>
         </div>
+
+        {/* Password Field */}
         <div className="mb-3">
           <label>Password</label>
           <input
@@ -58,9 +77,22 @@ export default function Login({ onLoginSuccess }) {
           />
           <p className="text-danger">{errors.password?.message}</p>
         </div>
-        <button type="submit" className="btn btn-primary">
-          Login
-        </button>
+
+        {/* Flex row: Login and Google button */}
+        <div className="flex items-center justify-between mt-4 gap-4">
+          <button type="submit" className="btn btn-primary">
+            Login
+          </button>
+
+          <div className="google-btn-wrapper">
+            <GoogleLogin
+              onSuccess={handleGoogleLoginSuccess}
+              onError={() => toast.error("Google Sign-In Failed")}
+              width="200"
+            />
+          </div>
+        </div>
+
         <ToastContainer position="top-center" autoClose={3000} />
       </form>
     </div>

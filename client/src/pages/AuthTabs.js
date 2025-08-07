@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 
@@ -9,6 +9,10 @@ export default function AuthTabs() {
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
     setActiveTab("");
+  };
+
+  const handleRegisterSuccess = () => {
+    setIsLoggedIn(true);
   };
 
   const handleLogout = (e) => {
@@ -46,7 +50,7 @@ export default function AuthTabs() {
             {activeTab === "login" ? (
               <Login onLoginSuccess={handleLoginSuccess} />
             ) : (
-              <Register />
+              <Register onRegisterSuccess={handleRegisterSuccess} />
             )}
           </div>
         </>

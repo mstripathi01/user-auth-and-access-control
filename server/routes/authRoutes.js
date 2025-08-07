@@ -4,12 +4,16 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const authMiddleware = require("../middleware/authMiddleware");
+const { verifyGoogleToken } = require("../controllers/authController");
 const adminEmails =
   process.env.ADMIN_EMAILS?.split(",").map((e) => e.trim().toLowerCase()) || [];
 const superAdminEmails =
   process.env.SUPERADMIN_EMAILS?.split(",").map((e) =>
     e.trim().toLowerCase()
   ) || [];
+
+router.post("/google", verifyGoogleToken);
+module.exports = router;
 
 // register
 router.post("/register", async (req, res) => {
