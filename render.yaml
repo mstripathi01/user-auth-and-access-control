@@ -9,7 +9,6 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      # Add your environment variables below
       - key: MONGO_URI
         sync: false
       - key: JWT_SECRET
@@ -17,9 +16,11 @@ services:
 
   - type: web
     name: myapp-client
+    env: node
     rootDir: client
-    buildCommand: npm install && npm run build
     plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npx serve -s build
     envVars:
       - key: REACT_APP_API_URL
         value: https://myapp-server.onrender.com
