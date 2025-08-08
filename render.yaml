@@ -19,7 +19,7 @@ services:
     name: myapp-client
     rootDir: client
     buildCommand: npm install && npm run build
-    publishDir: build
+    plan: free
     envVars:
       - key: REACT_APP_API_URL
         value: https://myapp-server.onrender.com
