@@ -15,7 +15,7 @@ services:
       - key: JWT_SECRET
         sync: false
 
-  - type: static
+  - type: web
     name: myapp-client
     rootDir: client
     buildCommand: npm install && npm run build
