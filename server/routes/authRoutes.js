@@ -13,7 +13,6 @@ const superAdminEmails =
   ) || [];
 
 router.post("/google", verifyGoogleToken);
-module.exports = router;
 
 // register
 router.post("/register", async (req, res) => {
