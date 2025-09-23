@@ -13,6 +13,10 @@ app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/", () => {
+  console.log("backend is running");
+});
+
 // app.use('/api', require('./routes/auth'));
 
 // Connect to DB and start server
