@@ -6,7 +6,6 @@ dotenv.config();
 const authRoutes = require("./routes/authRoutes");
 
 const app = express();
-console.log("ocess.env.MONGO_URI", process.env.MONGO_URI);
 
 // Middleware
 // app.use(cors());
@@ -20,10 +19,6 @@ app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
-
-app.get("/", (req, res) => {
-  res.json({ status: "ok", server: process.env.SERVER_URL });
-});
 
 // app.use('/api', require('./routes/auth'));
 
