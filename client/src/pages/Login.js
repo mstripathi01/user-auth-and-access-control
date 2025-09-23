@@ -7,6 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { GoogleLogin } from "@react-oauth/google";
 import "../App.css";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const schema = yup.object().shape({
   email: yup.string().email().required("Email is required"),
   password: yup.string().required("Password is required"),
@@ -22,10 +24,7 @@ export default function Login({ onLoginSuccess }) {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        data
-      );
+      const res = await axios.post(`${API_URL}/api/auth/login`, data);
       localStorage.setItem("token", res.data.token);
       toast.success("Login successfully!");
       onLoginSuccess();
@@ -38,7 +37,7 @@ export default function Login({ onLoginSuccess }) {
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/google", {
+      const res = await axios.post(`${API_URL}/api/auth/google`, {
         token: credentialResponse.credential,
       });
       localStorage.setItem("token", res.data.token);
