@@ -8,6 +8,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import "../App.css";
 
 const API_URL = process.env.REACT_APP_API_URL;
+console.log(API_URL, "API_URL");
 
 const schema = yup.object().shape({
   email: yup.string().email().required("Email is required"),
