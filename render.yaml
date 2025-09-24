@@ -23,4 +23,4 @@ services:
     startCommand: npx serve -s build
     envVars:
       - key: REACT_APP_API_URL
-        value: https://myapp-server.onrender.com
+        value: https://myapp-server-w9y5.onrender.com
